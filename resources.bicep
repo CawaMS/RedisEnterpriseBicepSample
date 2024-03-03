@@ -188,7 +188,7 @@ resource redisCache 'Microsoft.Cache/redisEnterprise@2023-11-01' = {
   identity:{
     type:'UserAssigned'
     userAssignedIdentities: {
-
+      '${managedIdentity.id}': {}
     }
   }
   properties:{
@@ -204,7 +204,6 @@ resource redisCache 'Microsoft.Cache/redisEnterprise@2023-11-01' = {
   }
 }
 
-//TODO
 resource redisdatabase 'Microsoft.Cache/redisEnterprise/databases@2022-01-01' = {
   name: 'default'
   parent: redisCache
@@ -247,11 +246,14 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
         objectId: managedIdentity.properties.principalId
         permissions: {
           keys: [
-            'all'
+            'get'
+            'wrapKey'
+            'unwrapKey'
           ]
         }
         tenantId: subscription().tenantId
       }]
+      enablePurgeProtection: true
   }
 }
 
