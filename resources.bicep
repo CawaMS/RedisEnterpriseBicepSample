@@ -66,7 +66,7 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2019-11-01' = {
 
 // added for Redis Cache
 resource privateDnsZoneCache 'Microsoft.Network/privateDnsZones@2020-06-01' = {
-  name: 'privatelink.redis.cache.windows.net'
+  name: 'privatelink.redisenterprise.cache.azure.net'
   location: 'global'
   tags: tags
   dependsOn:[
@@ -86,7 +86,7 @@ resource privateDnsZoneKeyVault 'Microsoft.Network/privateDnsZones@2020-06-01'={
  //added for Redis Cache
 resource privateDnsZoneLinkCache 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = {
  parent: privateDnsZoneCache
- name: 'privatelink.redis.cache.windows.net-applink'
+ name: 'privatelink.redisenterprise.cache.azure.net-applink'
  location: 'global'
  properties: {
    registrationEnabled: false
@@ -122,7 +122,7 @@ resource cachePrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-09-01' = 
         properties: {
           privateLinkServiceId: redisCache.id
           groupIds: [
-            'redisCache'
+            'redisEnterprise'
           ]
         }
       }
@@ -133,7 +133,7 @@ resource cachePrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-09-01' = 
     properties: {
       privateDnsZoneConfigs: [
         {
-          name: 'privatelink-redis-cache-windows-net'
+          name: 'privatelink-redisenterprise-cache-azure-net'
           properties: {
             privateDnsZoneId: privateDnsZoneCache.id
           }
