@@ -76,6 +76,7 @@ resource privateDnsZoneCache 'Microsoft.Network/privateDnsZones@2020-06-01' = {
 // added for Key Vault
 resource privateDnsZoneKeyVault 'Microsoft.Network/privateDnsZones@2020-06-01'={
   name: 'privatelink.vaultcore.azure.net'
+  //name: 'privatelink${environment().suffixes.keyvaultDns}'
   location: 'global'
   tags: tags
   dependsOn:[
@@ -169,7 +170,7 @@ resource keyVaultPrivateEndpoint 'Microsoft.Network/privateEndpoints@2023-09-01'
         {
           name: 'privatelink-vaultcore-azure-net'
           properties:{
-            privateDnsZoneId: privateDnsZoneCache.id
+            privateDnsZoneId: privateDnsZoneKeyVault.id
           }
         }
       ]
@@ -254,7 +255,14 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
         }
         tenantId: subscription().tenantId
       }]
+      enabledForDiskEncryption: true
+      enabledForTemplateDeployment: true
       enablePurgeProtection: true
+      //publicNetworkAccess:'disabled'
+      networkAcls: {
+        bypass: 'AzureServices'
+        defaultAction: 'Deny'
+      }
   }
 }
 
